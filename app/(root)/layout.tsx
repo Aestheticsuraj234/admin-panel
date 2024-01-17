@@ -7,28 +7,22 @@ export default async function Setuplayout({
 }: {
   children: React.ReactNode;
 }) {
+  const { userId } = auth();
+  if (!userId) {
+    redirect("/sign-in");
+  }
 
-    const {userId} = auth();
-    if(!userId) {
-       redirect("/sign-in"); 
-    }
-
-    const store = await prismadb.store.findFirst({
-        where:{
-            userId
-        }
-
-    })
-
-if(store)
-{
-    redirect(`/${store.id}`)
-}
-
-return (
-    <>
-    {children}
-    </>
-)
   
+
+  const store = await prismadb.store.findFirst({
+    where: {
+      userId,
+    },
+  });
+
+  if (store) {
+    redirect(`/${store.id}`);
+  }
+
+  return <>{children}</>;
 }
