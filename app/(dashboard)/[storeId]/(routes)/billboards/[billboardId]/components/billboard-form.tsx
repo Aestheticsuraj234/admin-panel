@@ -27,6 +27,7 @@ import { useRouter } from "next/navigation";
 import { AlertModal } from "@/components/modals/alert-model";
 import { ApiAlert } from "@/components/ui/api-alert";
 import { useOrigin } from "@/hooks/use-origin";
+import ImageUpload from "@/components/ui/image-upload";
 
 interface BillBoardFormProps {
   initialData: Billboard | null;
@@ -66,9 +67,15 @@ const BillBoardForm: React.FC<BillBoardFormProps> = ({ initialData }) => {
   const onSubmit = async (data: BillBoardFormValye) => {
     try {
       setLoading(true);
-      await axios.patch(`/api/stores/${params.storeId}`, data);
+      if (initialData) {
+      await axios.patch(`/api/${params.storeId}/billboards/${params.billboardId}`, data);
+      }
+      else {
+        await axios.post(`/api/${params.storeId}/billboards`, data);
+      }
       router.refresh();
-      toast.success("Store updated successfully");
+      router.push(`${params.storeId}/billboards`);
+      toast.success(toastMessage);
     } catch (error) {
       toast.error("Something went wrong");
     } finally {
@@ -79,12 +86,12 @@ const BillBoardForm: React.FC<BillBoardFormProps> = ({ initialData }) => {
   const onDelete = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/stores/${params.storeId}`);
+      await axios.delete(`/api/${params.storeId}/billboards/${params.billboardId}`);
       router.refresh();
       router.push("/");
-      toast.success("Store deleted successfully");
+      toast.success("Billboard deleted ");
     } catch (error) {
-      toast.error("Make sure you removed all products and categories first.");
+      toast.error("Make sure you removed all  categories first using this billboard");
     } finally {
       setLoading(false);
       setOpen(false);
@@ -100,22 +107,17 @@ const BillBoardForm: React.FC<BillBoardFormProps> = ({ initialData }) => {
         loading={loading}
       />
       <div className="flex items-center justify-between">
-        <Heading
-          title={title}
-          description={description}
-        />
-        {
-          initialData && (
-            <Button
+        <Heading title={title} description={description} />
+        {initialData && (
+          <Button
             disabled={loading}
             variant={"destructive"}
             size="icon"
-            onClick={()=>setOpen(true)}
-            >
-              <Trash className="h-4 w-4" />
-            </Button>
-          )
-        }
+            onClick={() => setOpen(true)}
+          >
+            <Trash className="h-4 w-4" />
+          </Button>
+        )}
 
         <Button
           disabled={loading}
@@ -132,6 +134,24 @@ const BillBoardForm: React.FC<BillBoardFormProps> = ({ initialData }) => {
           onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-8 w-full"
         >
+          <FormField
+            control={form.control}
+            name="imageUrl"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Background Image</FormLabel>
+                <FormControl>
+                  <ImageUpload
+                    value={field.value ? [field.value] : []}
+                    disabled={loading}
+                    onChange={(url) => field.onChange(url)}
+                    onRemove={() => field.onChange("")}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <div className="grid grid-cols-3 gap-8">
             <FormField
               control={form.control}
@@ -152,7 +172,7 @@ const BillBoardForm: React.FC<BillBoardFormProps> = ({ initialData }) => {
             />
           </div>
           <Button disabled={loading} className="ml-auto" type="submit">
-          {action}
+            {action}
           </Button>
         </form>
       </Form>
