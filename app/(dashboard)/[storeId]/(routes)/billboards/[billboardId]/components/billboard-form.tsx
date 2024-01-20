@@ -25,8 +25,7 @@ import axios from "axios";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { AlertModal } from "@/components/modals/alert-model";
-import { ApiAlert } from "@/components/ui/api-alert";
-import { useOrigin } from "@/hooks/use-origin";
+
 import ImageUpload from "@/components/ui/image-upload";
 
 interface BillBoardFormProps {
@@ -45,7 +44,6 @@ const BillBoardForm: React.FC<BillBoardFormProps> = ({ initialData }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const origin = useOrigin();
 
   const title = initialData ? "Edit Billboard" : "Create Billboard";
   const description = initialData
@@ -177,11 +175,7 @@ const BillBoardForm: React.FC<BillBoardFormProps> = ({ initialData }) => {
         </form>
       </Form>
       <Separator />
-      <ApiAlert
-        title="NEXT_PUBLIC_API_URL"
-        description={`${origin}/api/${params.storeId}`}
-        variant="public"
-      />
+     
     </>
   );
 };
