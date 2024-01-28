@@ -11,7 +11,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
   } from "@/components/ui/dropdown-menu"
-import { MoreHorizontal } from "lucide-react";
+import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
   
 
 interface CellActionProps{
@@ -30,13 +30,22 @@ export const CellAction: React.FC<CellActionProps> = ({
                 <MoreHorizontal className="h-4 w-4" />
             </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <DropdownMenuLabel>My Account</DropdownMenuLabel>
+        <DropdownMenuContent align="end">
+          <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>Profile</DropdownMenuItem>
-          <DropdownMenuItem>Billing</DropdownMenuItem>
-          <DropdownMenuItem>Team</DropdownMenuItem>
-          <DropdownMenuItem>Subscription</DropdownMenuItem>
+          <DropdownMenuItem>
+            <Edit className="mr-2 h-4 w-4" />
+            Update
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <Copy className="mr-2 h-4 w-4" />
+            Copy Id
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <Trash className="mr-2 h-4 w-4" />
+            Delete
+          </DropdownMenuItem>
+          
         </DropdownMenuContent>
       </DropdownMenu>
       
